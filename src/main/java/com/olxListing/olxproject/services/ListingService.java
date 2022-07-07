@@ -13,13 +13,13 @@ public interface ListingService {
 	
 	public ResponseEntity<String> addListing(Listing listing);
 	
-	public List<Listing> displayListings();
+	public ResponseEntity<?> displayListings();
 
-	public User_Entity displayContactDetails(int id);
+	public ResponseEntity<?> displayContactDetails(int id);
 
 	public Listing updateListing(Listing listing);
 
-	public ResponseEntity<List<Listing>> searchUsingCategory(String category);
+	public ResponseEntity<?> searchUsingCategory(String category);
 
 	public ResponseEntity<List<Listing>> searchUsingLocation(String city);
 

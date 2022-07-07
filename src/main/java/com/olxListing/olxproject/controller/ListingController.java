@@ -30,18 +30,18 @@ public class ListingController {
 	}
 	
 	@GetMapping("/display")
-	public List<Listing> displayListings(){
+	public ResponseEntity<?> displayListings(){
 		
 		return listingService.displayListings();
 	}
 	
 	@GetMapping("/searchUsingCategory/{category}")
-	public ResponseEntity<List<Listing>> searchUsingName(@PathVariable("category") String category){
+	public ResponseEntity<?> searchUsingName(@PathVariable("category") String category){
 		return listingService.searchUsingCategory(category) ;
 	}
 	
 	@GetMapping("/contactDetails/{id}")
-	public User_Entity displayContactDetails(@PathVariable("id") int id) {
+	public ResponseEntity<?> displayContactDetails(@PathVariable("id") int id) {
 		return listingService.displayContactDetails(id);
 	}
 	

@@ -26,45 +26,66 @@ public class ListingServiceImpl implements ListingService{
 	@Autowired
 	User_Repo userRepo;
 	
-	@Override
 	public ResponseEntity<String> addListing(Listing listing) {
-		int id = listing.getUserEntity().getId();
-        User_Entity user = userRepo.getById(id);
-		
-		if(user.isActivate() && user.isLoggedIn()) {
-			 listingRepo.save(listing);
-			 String msg = "Product added successfully";
-			 return new ResponseEntity<String>(msg, HttpStatus.OK);
+		try {
+			int id = listing.getUserEntity().getId();
+	        User_Entity user = userRepo.findById(id).get();
+			
+			if(user.isActivate() && user.isLoggedIn()) {
+				 listingRepo.save(listing);
+				 String msg = "Product added successfully";
+				 return new ResponseEntity<String>(msg, HttpStatus.OK);
+			}
+			else {
+				String msg = "Login to add any product...";
+				return new ResponseEntity<String>(msg,HttpStatus.OK);
+			}
+			
+		}catch
+(Exception e) {
+			String msg = "Enter details properlyy....";
+			 return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
-		else {
-			String msg = "Login to add any product...";
-			return new ResponseEntity<String>(msg,HttpStatus.OK);
+		
+	}
+
+
+	public ResponseEntity<?> displayListings() {
+		try {
+			if(!listingRepo.findAll().isEmpty())
+				return new ResponseEntity<List<Listing>>(listingRepo.findAll(),HttpStatus.OK);
+			else
+				return new ResponseEntity<String>("No products....",HttpStatus.BAD_REQUEST);
+		}catch(Exception e) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 		
 	}
 
-	@Override
-	public List<Listing> displayListings() {
-		return listingRepo.findAll();
+	public ResponseEntity<?> displayContactDetails(int id) {
+		try {
+			Listing listing =  listingRepo.findById(id).get();
+			return new ResponseEntity<User_Entity>(listing.getUserEntity(),HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<String>("Enter valid id...",HttpStatus.BAD_REQUEST);
+		}
+		
 	}
-
-	@Override
-	public User_Entity displayContactDetails(int id) {
-		Listing listing =  listingRepo.findById(id).get();
-		return listing.getUserEntity();
-	}
-
 	@Override
 	public Listing updateListing(Listing listing) {
 		return listingRepo.save(listing);
 	}
 
-	@Override
-	public ResponseEntity<List<Listing>> searchUsingCategory(String category)  {
-		if(!listingRepo.findBycategory(category).isEmpty())
-			return new ResponseEntity<List<Listing>>(listingRepo.findBycategory(category),HttpStatus.OK);
-		else
-			return new ResponseEntity<List<Listing>>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> searchUsingCategory(String category)  {
+		try {
+			if(!listingRepo.findBycategory(category).isEmpty())
+				return new ResponseEntity<List<Listing>>(listingRepo.findBycategory(category),HttpStatus.OK);
+			else
+				return new ResponseEntity<String>("No items in this category..",HttpStatus.BAD_REQUEST);
+		}catch(Exception e) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 
 	@Override
